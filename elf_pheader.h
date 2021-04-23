@@ -51,12 +51,14 @@
  */
 #define PT_LOPROC   0x7000000000000000
 #define PT_HIPROX   0x7fffffffffffffff
+/* Flat size */
+#define PHDR_SIZE 56
 
 typedef struct {
     /* This member tells what kind of segment this array element
      * describes or how to interpret the array element's information.
      */
-    Elf64_Word  p_type;
+    Elf64_Half  p_type;
     /* This member gives the offset from the beginning of the file
      * at which the first byte of the segment resides.
      */
@@ -80,7 +82,7 @@ typedef struct {
      */
     Elf64_Word  p_memsz;
     /* This member gives flags relevant to the segment. */
-    Elf64_Word  p_flags;
+    Elf64_Half  p_flags;
     /* Loadable process segments must have congruent values for `p_vaddr`
      * and `p_offset`, modulo the page size. This member gives the value
      * to which the segments are aligned in memory and in the file. Values
