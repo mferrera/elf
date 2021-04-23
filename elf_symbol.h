@@ -27,6 +27,33 @@
 #define STB_LOPROC 13
 #define STD_HIPROC 15
 
+/* Symbol Types */
+
+/* The symbol's type is not specified. */
+#define STT_NOTYPE 0
+/* The symbol is associated with a data object, such as a variable,
+ * an array, etc.
+ */
+#define STT_OBJECT  1
+/* The symbol is associated with a function or other executable code. */
+#define STT_FUNC    2
+/* The symbol is associated with a section. Symbol table entries of
+ * this type exist primarily for relocation and normally have
+ * `STB_LOCAL` binding.
+ */
+#define STT_SECTION 3
+/* Conventionally, the symbol's name gives the name of the source file
+ * associated with the object file. A file symbol has `STB_LOCAL` 
+ * binding, its section index is `SHN_ABS`, and it precedes the 
+ * other `STB_LOCAL` symbols for the file, if it is present.
+ */
+#define STT_FILE   4
+/* Values in this inclusive range are reserved for processor-specific
+ * semantics.
+ */
+#define STT_LOPROC 13
+#define STT_HIPROC 15
+
 /* An entry in the symbol table. */
 typedef struct {
     /* This member holds an index into the object file's symbol
