@@ -8,12 +8,20 @@ modern 64-bit world.
 Currently, all this does is write bytes in ELF64 format for a binary file
 named `b.out`. This binary contains only the minimum necessary: the ELF
 header, program header, and 7 bytes of 32-bit shellcode that call
-`exit(0)`. The binary it outputs is 127 bytes in size.
+`exit(0)`. There's (not yet) actual `.data`, `.bss`, or `.text` sections
+(or any of the other sections). The binary it outputs is 127 bytes in size.
 
 # Usage
 
 ```
 make
 ./b.out
-echo &?
+echo $?
 ```
+
+# Future
+
+- Add proper sections?
+- Run more interesting operations?
+- Add ARM support?
+- ?
