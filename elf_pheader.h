@@ -66,6 +66,8 @@ typedef struct {
      * describes or how to interpret the array element's information.
      */
     Elf64_Half  p_type;
+    /* This member gives flags relevant to the segment. */
+    Elf64_Half  p_flags;
     /* This member gives the offset from the beginning of the file
      * at which the first byte of the segment resides.
      */
@@ -88,8 +90,6 @@ typedef struct {
      * segment; it may be zero.
      */
     Elf64_Word  p_memsz;
-    /* This member gives flags relevant to the segment. */
-    Elf64_Half  p_flags;
     /* Loadable process segments must have congruent values for `p_vaddr`
      * and `p_offset`, modulo the page size. This member gives the value
      * to which the segments are aligned in memory and in the file. Values
