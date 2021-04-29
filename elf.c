@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #include "elf.h"
 #include "elf_pheader.h"
@@ -143,6 +144,7 @@ int main() {
     */
     char text[] = "\xb0\x3c\x48\x31\xff\x0f\x05";
     fwrite(text, 7, 1, f);
-
     fclose(f);
+    /* chmod 770 */
+    chmod("./b.out", S_IRUSR|S_IWUSR|S_IXUSR|S_IRGRP|S_IWGRP|S_IXGRP);
 }
