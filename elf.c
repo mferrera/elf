@@ -138,9 +138,9 @@ int main() {
     fwrite(pbuf, PHDR_SIZE, 1, f);
 
     /* Call exit(0)
-     *      mov al, 0x3c    ; b0 3c
-     *      xor rdi, rdi    ; 48 31 ff
-     *      syscall         ; 0f 05
+     *      0x100078    mov    $0x3c,%al ; b0 3c
+     *      0x10007a    xor    %rdi,%rdi ; 48 31 ff
+     *      0x10007d    syscall          ; 0f 05
     */
     char text[] = "\xb0\x3c\x48\x31\xff\x0f\x05";
     fwrite(text, 7, 1, f);
