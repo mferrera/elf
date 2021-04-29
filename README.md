@@ -15,6 +15,7 @@ header, program header, and 7 bytes of 32-bit shellcode that call
 
 ```
 make
+./elf
 ./b.out
 echo $?
 ```
