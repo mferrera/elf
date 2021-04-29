@@ -51,6 +51,13 @@
  */
 #define PT_LOPROC   0x7000000000000000
 #define PT_HIPROX   0x7fffffffffffffff
+/* Flags */
+/* Execute */
+#define PF_X 0x1
+/* Write */
+#define PF_W 0x2
+/* Read */
+#define PF_R 0x4
 /* Flat size */
 #define PHDR_SIZE 56
 

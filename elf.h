@@ -58,7 +58,7 @@
 #define ET_HIPROX 0xffff
 /* Machine type */
 #define EM_NONE   0
-#define EM_X86_64 62 // 0x3e
+#define EM_X86_64 0x3e // 62
 /* ELF Version */
 #define EV_NONE    0
 #define EV_CURRENT 1

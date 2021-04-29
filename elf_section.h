@@ -148,7 +148,7 @@ typedef struct {
      * location of a NULL-terminated string.
      */
     Elf64_Half  sh_name;
-    /* This member categorizeds the section's contents and semantics. */
+    /* This member categorizes the section's contents and semantics. */
     Elf64_Half  sh_type;
     /* Sections support 1-bit flags that describe miscellaneous attributes. */
     Elf64_Word  sh_flags;

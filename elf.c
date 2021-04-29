@@ -41,6 +41,8 @@ void pack_ehdr(void *buf, Elf64_Ehdr *h) {
 void pack_phdr(void *buf, Elf64_Phdr *h) {
     *(Elf64_Half *)buf = h->p_type;
     buf += sizeof(Elf64_Half);
+    *(Elf64_Half *)buf = h->p_flags;
+    buf += sizeof(Elf64_Half);
     *(Elf64_Off *)buf = h->p_offset;
     buf += sizeof(Elf64_Off);
     *(Elf64_Addr *)buf = h->p_vaddr;
@@ -51,8 +53,6 @@ void pack_phdr(void *buf, Elf64_Phdr *h) {
     buf += sizeof(Elf64_Word);
     *(Elf64_Word *)buf = h->p_memsz;
     buf += sizeof(Elf64_Word);
-    *(Elf64_Half *)buf = h->p_flags;
-    buf += sizeof(Elf64_Half);
     *(Elf64_Word *)buf = h->p_align;
 }
 
@@ -61,6 +61,11 @@ int main() {
     char *hbuf[EHDR_SIZE] = {0};
     char *pbuf[PHDR_SIZE] = {0};
 
+    /*
+     * ##################
+     * #   Elf Header   #
+     * ##################
+     */
     Elf64_Ehdr hdr = {0};
      /* Begin with the magic number: 0x7f 'E' 'L' 'F' */
     hdr.e_ident[EI_MAG0] = ELFMAG0;
@@ -80,50 +85,64 @@ int main() {
     hdr.e_machine = EM_X86_64;
     /* The version of this ELF file. */
     hdr.e_version = EV_CURRENT;
-    /* Our entry point is right ?? */
-    hdr.e_entry = 0x40;
-    /* The program header table offset.
-     * Set to be directly after the ELF header.
-     */
+    /* Our entry point is
+     *      v/p_addr + 0x78
+     * where 78 is the 120 bytes of the ELF header and program header*/
+    hdr.e_entry = 0x100078;
+    /* The program header table offset. Directly after the ELF header.  */
     hdr.e_phoff = 0x40;
     /* Section header offset. */
-    hdr.e_shoff = SHN_UNDEF;
+    hdr.e_shoff = 0x0;
     /* Processor flags. */
-    hdr.e_flags = 0;
+    hdr.e_flags = 0x0;
     /* The size of this header. */
     hdr.e_ehsize = EHDR_SIZE;
     /* The size of the program header table entry. */
     hdr.e_phentsize = PHDR_SIZE;
     /* The number of program header entries in the table. */
-    hdr.e_phnum = 1;
+    hdr.e_phnum = 0x1;
     /* The section header size. */
-    hdr.e_shentsize = SHDR_SIZE;
+    hdr.e_shentsize = 0x0;
     /* The number of sections. */
-    hdr.e_shnum = SHN_UNDEF;
+    hdr.e_shnum = 0x0;
     /* Section header index of the string table. */
-    hdr.e_shstrndx = SHN_UNDEF;
+    hdr.e_shstrndx = 0x0;
     /* Flatten this struct into the buffer. */
     pack_ehdr(hbuf, &hdr);
     fwrite(hbuf, EHDR_SIZE, 1, f);
 
+    /*
+     * ##################
+     * # Program Header #
+     * #################
+     */
     Elf64_Phdr phdr = {0};
     /* This is the phdr table itself. */
-    phdr.p_type = PT_PHDR;
+    phdr.p_type = PT_LOAD;
+    /* Flags */
+    phdr.p_flags = PF_X;
     /* It's located right here. */
-    phdr.p_offset = 0x40;
+    phdr.p_offset = 0x0;
     /* Same with the virtual and physical address. */
-    phdr.p_vaddr = 0x40;
-    phdr.p_paddr = 0x40;
-    /* The bytes in this segment are 0. */
-    phdr.p_filesz = 0;
-    phdr.p_memsz = 0;
-    /* No flags to set. */
-    phdr.p_flags = 0;
+    phdr.p_vaddr = 0x100000;
+    /* The physical address isn't used. */
+    phdr.p_paddr = 0x100000;
+    /* Our .text code is only 7 bytes of instructions. */
+    phdr.p_filesz = 0x7;
+    phdr.p_memsz = 0x7;
     /* We're aligning this congruent with our earlier addresses. */
-    phdr.p_align = 0x40;
+    phdr.p_align = 0x10000;
     /* Flatten this struct & write it */
     pack_phdr(pbuf, &phdr);
     fwrite(pbuf, PHDR_SIZE, 1, f);
+
+    /* Call exit(0)
+     *      mov al, 0x3c    ; b0 3c
+     *      xor rdi, rdi    ; 48 31 ff
+     *      syscall         ; 0f 05
+    */
+    char text[] = "\xb0\x3c\x48\x31\xff\x0f\x05";
+    fwrite(text, 7, 1, f);
 
     fclose(f);
 }
