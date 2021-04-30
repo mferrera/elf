@@ -73,7 +73,6 @@ int main() {
     hdr.e_ident[EI_MAG1] = ELFMAG1;
     hdr.e_ident[EI_MAG2] = ELFMAG2;
     hdr.e_ident[EI_MAG3] = ELFMAG3;
-    hdr.e_ident[EI_MAG3] = ELFMAG3;
     /* The file class. */
     hdr.e_ident[EI_CLASS] = ELFCLASS64;
     /* The data encoding. */
@@ -87,7 +86,7 @@ int main() {
     /* The version of this ELF file. */
     hdr.e_version = EV_CURRENT;
     /* Our entry point is
-     *      v/p_addr + 0x78
+     *      v_addr + 0x78
      * where 78 is the 120 bytes of the ELF header and program header*/
     hdr.e_entry = 0x100078;
     /* The program header table offset. Directly after the ELF header.  */
@@ -132,7 +131,7 @@ int main() {
     phdr.p_filesz = 0x7;
     phdr.p_memsz = 0x7;
     /* We're aligning this congruent with our earlier addresses. */
-    phdr.p_align = 0x10000;
+    phdr.p_align = 0x100000;
     /* Flatten this struct & write it */
     pack_phdr(pbuf, &phdr);
     fwrite(pbuf, PHDR_SIZE, 1, f);
